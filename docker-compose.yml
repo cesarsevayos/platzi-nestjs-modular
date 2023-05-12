@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  #Se debe declarar uno por uno, cada servicio a utilizar
+  db-postgres:
+    image: postgres:13
+    environment:
+    #Las variables postgres_db / postgres_user / postgres_password deben llamarse asi para que se reconozcan
+      - POSTGRES_DB=my_db
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=123456789 
+    ports:
+    #Por defecto postgres corre en el puerto 5432
+      - '5433:5432'
+    volumes:
+      #Se usa para especificar el volumen de datos y persistirlos en la raiz ./postgres_data
+      - ./postgres_data:/var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=root@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - '5050:80'
+  mysql:
+    image: mysql:5
+    environment:
+      - MYSQL_DATABASE=my_db
+      - MYSQL_ROOT_PASSWORD=123456789
+    ports:
+      - '3307:3306'
+    volumes:
+      - ./mysql_data:/var/lib/mysql
