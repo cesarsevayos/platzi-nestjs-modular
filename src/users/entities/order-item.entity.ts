@@ -4,32 +4,38 @@ import {
   Entity,
   CreateDateColumn,
   UpdateDateColumn,
-  ManyToMany,
-  JoinTable
+  ManyToOne,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
-import { Product } from './product.entity';
+import { Order } from './order.entity';
+import { Product } from '../../products/entities/product.entity';
 
 @Entity()
-export class Category {
+export class OrderItem {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 255 })
-  name: string;
-
+  @Exclude()
   @CreateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   createAt: Date;
 
+  @Exclude()  
   @UpdateDateColumn({
     type: 'timestamptz',
     default: () => 'CURRENT_TIMESTAMP',
   })
   updateAt: Date;
 
-  @ManyToMany(() => Product, (products) => products.categories)
-  products: Product[];
+  @Column({ type: 'int' })
+  quantity: number;
+
+  @ManyToOne(() => Product)
+  product: Product;
+
+  @ManyToOne(() => Order, (order) => order.items)
+  order: Order;
 }
