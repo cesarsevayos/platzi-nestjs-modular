@@ -20,7 +20,7 @@ export class OrderItemsService {
   }
 
   async findOne(id: number) {
-    const order = await this.orderItemRepo.findOne(id);
+    const order = await this.orderItemRepo.findOne({ where: { id } });
     if (!order) {
       throw new NotFoundException(`Order Item #${id} not found`);
     }
@@ -28,8 +28,12 @@ export class OrderItemsService {
   }
 
   async create(data: CreateOrderItemDto) {
-    const order = await this.orderRepo.findOne(data.orderId);
-    const product = await this.productRepo.findOne(data.productId);
+    const order = await this.orderRepo.findOne({
+      where: { id: data.orderId },
+    });
+    const product = await this.productRepo.findOne({
+      where: { id: data.productId },
+    });
     const item = new OrderItem();
     item.order = order;
     item.product = product;
